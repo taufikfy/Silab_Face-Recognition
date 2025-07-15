@@ -9,8 +9,8 @@ function registerStudent($nim, $name, $photoFilename) {
 
 function checkIn($studentId, $notes = null) {
     global $pdo;
-    $stmt = $pdo->prepare("INSERT INTO attendance (student_id, check_in, notes) VALUES (?, NOW(), ?)");
-    return $stmt->execute([$studentId, $notes]);
+    $stmt = $pdo->prepare("INSERT INTO attendance (student_id, attended_at) VALUES (?, NOW())");
+    return $stmt->execute([$studentId]);
 }
 
 function checkOut($studentId) {
@@ -22,14 +22,14 @@ function checkOut($studentId) {
 
 function getAttendanceRecords($filter = []) {
     global $pdo;
-    $date = $filter['date'] ?? date('Y-m-d');
+    $date = $filter['attended_at'] ?? date('Y-m-d');
     // Perbaiki bagian JOIN berikut:
     $stmt = $pdo->prepare("
-        SELECT a.*, s.name 
+        SELECT a.id, a.student_id, a.attended_at, s.name, s.nim
         FROM attendance a
-        JOIN students s ON a.nim = s.nim
-        WHERE a.date = ?
-        ORDER BY a.check_in ASC
+        JOIN students s ON a.student_id = s.id
+        WHERE date(a.attended_at) = ?
+        ORDER BY a.attended_at ASC
     ");
     $stmt->execute([$date]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);

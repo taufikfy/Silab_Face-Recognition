@@ -4,10 +4,8 @@ require_once __DIR__ . '/includes/functions.php';
 $students = [];
 $attendance = [];
 
-if (isset($_GET['search'])) {
-    $students = $pdo->query("SELECT * FROM students ORDER BY name")->fetchAll();
-    $attendance = getAttendanceRecords(['date' => date('Y-m-d')]);
-}
+$students = $pdo->query("SELECT * FROM students ORDER BY name")->fetchAll();
+$attendance = getAttendanceRecords(['attended_at' => date('Y-m-d')]);
 ?>
 
 <!DOCTYPE html>
@@ -84,7 +82,6 @@ if (isset($_GET['search'])) {
                                         <th>NIM</th>
                                         <th>Name</th>
                                         <th>Check In</th>
-                                        <th>Check Out</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -92,8 +89,7 @@ if (isset($_GET['search'])) {
                                     <tr>
                                         <td><?= htmlspecialchars($record['nim']) ?></td>
                                         <td><?= htmlspecialchars($record['name']) ?></td>
-                                        <td><?= date('H:i', strtotime($record['check_in'])) ?></td>
-                                        <td><?= $record['check_out'] ? date('H:i', strtotime($record['check_out'])) : '-' ?></td>
+                                        <td><?= date('Y-m-d H:i', strtotime($record['attended_at'])) ?></td>
                                     </tr>
                                     <?php endforeach; ?>
                                 </tbody>

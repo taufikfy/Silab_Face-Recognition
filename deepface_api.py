@@ -4,6 +4,18 @@ from deepface import DeepFace
 import cv2
 import numpy as np
 import base64
+import tempfile
+import os
+
+def save_temp_image(img: np.ndarray) -> str:
+    """
+    Save an OpenCV image to a temporary .jpg file and return its absolute path.
+    The file is NOT deleted automatically; you can add cleanup later if needed.
+    """
+    fd, path = tempfile.mkstemp(suffix=".jpg")
+    cv2.imwrite(path, img)
+    os.close(fd)          # close the low-level file descriptor
+    return path
 
 app = Flask(__name__)
 CORS(app)
@@ -54,11 +66,32 @@ def verify():
         )
         print(f"[INFO] Find result: {result}")
 
-        if len(result) > 0:
-            identity = result.iloc[0]['identity']
-            return jsonify({"status": "success", "identity": identity, "framed_image": img_with_frame})
+        best_identity = None
+        best_score = 1.0        # distance is 0..2; smaller is better
+
+        for df in result:
+            if not df.empty:
+                top = df.iloc[0]
+                if top['distance'] < best_score:
+                    best_score = top['distance']
+                    best_identity = top['identity']
+
+        # ---- return ----
+        if best_identity is not None:
+            return jsonify({
+                "status": "success",
+                "identity": best_identity,
+                "score": float(best_score),
+                "framed_image": img_with_frame
+            })
         else:
-            return jsonify({"status": "not_found", "framed_image": img_with_frame})
+            return jsonify({
+                "status": "not_found",
+                "framed_image": img_with_frame
+            })
+        #     return jsonify({"status": "success", "identity": identity, "framed_image": img_with_frame})
+        # else:
+        #     return jsonify({"status": "not_found", "framed_image": img_with_frame})
 
     except Exception as e:
         print("Error occurred:", str(e))
