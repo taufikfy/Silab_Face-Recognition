@@ -3,48 +3,28 @@ require_once __DIR__ . '/includes/functions.php';
 
 header('Content-Type: application/json');
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $identity = $_POST['identity'] ?? '';
-    if (!$identity) {
-        echo json_encode(['status' => 'error', 'message' => 'No identity provided']);
-        exit;
-    }
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['identity']) && isset($_POST['action'])) {
+    $nim = $_POST['identity'];
+    $action = $_POST['action'];
 
-    // Ambil NIM dari nama file, misal: faces/12345678.jpg
-    $path = pathinfo($identity, PATHINFO_FILENAME);
-    $nim = explode('_', $path)[0] ?? '';
-
-    // Cek apakah NIM terdaftar
-    $stmt = $pdo->prepare("SELECT * FROM students WHERE nim = ?");
-    $stmt->execute([$nim]);
-    $student = $stmt->fetch();
-
+    $student = getStudentByNIM($nim);
     if (!$student) {
-        echo json_encode(['status' => 'error', 'message' => 'Mahasiswa tidak ditemukan']);
+        echo json_encode(['status' => 'error', 'message' => 'Mahasiswa tidak ditemukan.']);
         exit;
     }
 
-    // Simpan presensi (check-in/check-out)
-    $today = date('Y-m-d');
-    $now = date('Y-m-d H:i:s');
-
-    // Cek apakah sudah check-in hari ini
-    $stmt = $pdo->prepare("SELECT * FROM attendance WHERE student_id = ? AND date(attended_at) = ?");
-    $stmt->execute([$student['id'], $today]);
-    $attendance = $stmt->fetch();
-
-    if (!$attendance) {
-        // Belum check-in, simpan check-in
-        $stmt = $pdo->prepare("INSERT INTO attendance (student_id, attended_at) VALUES (?, ?)");
-        $stmt->execute([$student['id'], $now]);
-        echo json_encode(['status' => 'success', 'message' => 'Check-in berhasil', 'nim' => $nim, 'name' => $student['name']]);
-    // } else if (!$attendance['check_out']) {
-    //     // Sudah check-in, simpan check-out
-    //     $stmt = $pdo->prepare("UPDATE attendance SET check_out = ? WHERE id = ?");
-    //     $stmt->execute([$now, $attendance['id']]);
-    //     echo json_encode(['status' => 'success', 'message' => 'Check-out berhasil', 'nim' => $nim, 'name' => $student['name']]);
+    if ($action === 'checkin') {
+        $result = checkIn($student['id']);
+        echo json_encode($result);
+        exit;
+    } elseif ($action === 'checkout') {
+        $result = checkOut($student['id']);
+        echo json_encode($result);
+        exit;
     } else {
-        // Sudah check-in dan check-out
-        echo json_encode(['status' => 'info', 'message' => 'Presensi hari ini sudah lengkap', 'nim' => $nim, 'name' => $student['name']]);
+        echo json_encode(['status' => 'error', 'message' => 'Aksi tidak valid.']);
+        exit;
     }
 }
+
+echo json_encode(['status' => 'error', 'message' => 'Request tidak valid.']);

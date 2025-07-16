@@ -1,2 +1,35 @@
 /* filepath: c:\xampp\htdocs\Silab-Face Recognition\assets\css\style.css */
 body { background: #f8f9fa; }
+.video-container {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  border: 1px solid #dee2e6;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background: #000;
+}
+
+video, canvas {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+.nav-pills .nav-link {
+  border-radius: 0.75rem;
+  transition: all 0.2s ease-in-out;
+}
+.nav-pills .nav-link.active {
+  background-color: #0d6efd;
+  color: #fff !important;
+}
+.nav-pills .nav-link:hover {
+  background-color: #e2e6ea;
+}
