@@ -1,4 +1,4 @@
-# deepface
+# Silab Face Recognition
 
 <div align="center">
 
@@ -8,7 +8,6 @@
 [![Tests](https://github.com/serengil/deepface/actions/workflows/tests.yml/badge.svg)](https://github.com/serengil/deepface/actions/workflows/tests.yml)
 [![DOI](http://img.shields.io/:DOI-10.17671/gazibtd.1399077-blue.svg?style=flat)](https://doi.org/10.17671/gazibtd.1399077)
 
-[![Blog](https://img.shields.io/:blog-sefiks.com-blue.svg?style=flat&logo=wordpress)](https://sefiks.com)
 [![Instagram](https://img.shields.io/:instagram-@sefiks-red.svg?style=flat&logo=instagram)](https://www.instagram.com/taufik.fy_/)
 [![Twitter](https://img.shields.io/:follow-@serengil-blue.svg?style=flat&logo=x)](https://twitter.com/intent/user?screen_name=serengil)
 
