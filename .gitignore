@@ -1,0 +1,8 @@
+# Jangan masukin file/folder MySQL & venv
+mysql-data/
+venv/
+
+# Jangan masukin log dan file sementara
+*.log
+*.sock
+__pycache__/

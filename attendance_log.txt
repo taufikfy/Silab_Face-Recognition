@@ -1,0 +1,16 @@
+Received: Identity=32602200005, Action=checkin
+Received: Identity=32602200005, Action=checkin
+Received: Identity=32602200005, Action=checkin
+Received: Identity=32602200005, Action=checkin
+Received: Identity=32602200005, Action=checkin
+Received: Identity=32602200005, Action=checkin
+Received: Identity=32602200005, Action=checkin
+Received: Identity=32602200005, Action=checkin
+Received: Identity=32602200027, Action=checkin
+Received: Identity=32602200027, Action=checkout
+Received: Identity=32602200027, Action=checkin
+Received: Identity=326022000272, Action=checkout
+Received: Identity=32602200027, Action=checkin
+Received: Identity=326022000272, Action=checkin
+Received: Identity=32602200027212, Action=checkin
+Received: Identity=32602200027212, Action=checkout
