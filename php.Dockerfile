@@ -8,4 +8,4 @@ RUN docker-php-ext-install pdo pdo_mysql
 COPY . /var/www/html/
 
 # Pastikan folder 'faces' bisa ditulis oleh server
-RUN chown -R www-data:www-data /var/www/html/faces
+RUN chown -R www-data:www-data /var/www/html/

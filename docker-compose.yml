@@ -1,6 +1,3 @@
-# docker-compose.yml
-version: '3.8'
-
 services:
   # Layanan Database (MySQL)
   db:
@@ -8,7 +5,7 @@ services:
     restart: always
     environment:
       MYSQL_DATABASE: face_attendance
-      MYSQL_ROOT_PASSWORD: root_password # Ganti dengan password yang aman jika perlu
+      MYSQL_ROOT_PASSWORD: root_password
     volumes:
       - ./mysql-data:/var/lib/mysql
 
@@ -20,7 +17,7 @@ services:
     ports:
       - "8080:80" # Akses web dari browser melalui http://localhost:8080
     volumes:
-      - .:/var/www/html/ # Sinkronisasi file kode dengan container
+      - .:/var/www/html/
     depends_on:
       - db
 
@@ -32,7 +29,19 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - .:/app # Sinkronisasi file kode dengan container
-      - ./faces:/app/faces # Pastikan folder 'faces' sama antara PHP dan Python
+      - .:/app
+      - ./faces:/app/faces
+    depends_on:
+      - db
+
+  # Layanan phpMyAdmin (Baru Ditambahkan)
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - "8081:80" # Akses dari browser melalui http://localhost:8081
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
     depends_on:
       - db
